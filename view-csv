@@ -1,0 +1,13 @@
+''' fips.csv looks like this:
+statename,code,twoletter                                                                                                                                                              
+Alabama,1,AL    
+Alaska,2,AK
+Arizona,4,AZ
+Arkansas,5,AR
+
+ 
+fips_csv = csv.DictReader(open('fips.csv', 'rU'), dialect='excel')
+
+for row in fips_csv:    
+    values = row.values()    
+    print values
