@@ -4,7 +4,7 @@ Alabama,1,AL
 Alaska,2,AK
 Arizona,4,AZ
 Arkansas,5,AR
-
+'''
  
 fips_csv = csv.DictReader(open('fips.csv', 'rU'), dialect='excel')
 
