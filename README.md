@@ -1,4 +1,3 @@
 python-snippets
 ===============
-
-shared repository
+Miscellaneous Python snippets
