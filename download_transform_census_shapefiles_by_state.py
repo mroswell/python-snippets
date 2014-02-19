@@ -15,7 +15,11 @@ TIGER_SHAPE_TYPES = {
 TIGER_SHAPE_TYPES = {'congress': 'cd113'} # remove this when not testing
 TIGER_DISTRICTS_URL_BASE = 'http://www2.census.gov/geo/tiger/TIGERrd13_st'
 OGR2OGR = '/Library/Frameworks/GDAL.framework/Versions/Current/Programs/ogr2ogr'
-mkOGR_NAD84_2_webm_cmd = lambda src, dst: ( OGR2OGR, '-f', 'ESRI Shapefile', dst, src, '-s_srs', 'EPSG:4269', '-t_srs', 'EPSG:3857', )
+OGRINFO = '/Library/Frameworks/GDAL.framework/Versions/Current/Programs/ogrinfo'
+
+# mkOGR_NAD84_2_webm_cmd = lambda src, dst: (OGR2OGR, '-f', 'ESRI Shapefile', dst, src, '-s_srs', 'EPSG:4269', '-t_srs', 'EPSG:3857' )
+mkOGR_NAD84_2_webm_cmd = lambda src, dst: (OGR2OGR + ' -f ESRI Shapefile '+dst +' '+ src + ' s_srs EPSG:4269 -t_srs EPSG:3857 -overwrite' )
+info_cmd = lambda src: (OGRINFO+' -so '+ src)
 DOWNLOAD_DIR = os.path.expanduser('~/Desktop/ogr2ogr-tests/downloads'); makedirs(DOWNLOAD_DIR)
 WEBM_DIR = os.path.expanduser('~/Desktop/ogr2ogr-tests/webm'); makedirs(WEBM_DIR)
 TMP_DIR = os.path.expanduser('~/Desktop/ogr2ogr-tests/tmp'); makedirs(TMP_DIR)
@@ -49,8 +53,8 @@ for row in fips_csv:
 
             os.system('unzip ' + filename + ".zip")
 
-          # not having success running the ogr2ogr
-          #  os.system('mkOGR_NAD84_2_webm_cmd(filename +"shp", filename+".webm.shp")' )
+            os.system(repr(info_cmd(filename+".shp")))
+#            os.system(repr(mkOGR_NAD84_2_webm_cmd(filename +".shp", filename+"webm.shp")) )
           # os.system ('/Library/Frameworks/GDAL.framework/Versions/Current/Programs/ogr2ogr -f ESRI Shapefile ' + filename+"webm.shp " + filename + ".shp  -s_srs EPSG:4269 -t_srs EPSG:3857" )
 
 #        except:
@@ -60,3 +64,4 @@ for row in fips_csv:
 #            print re.findall("name '(\w+)' is not defined",str(e))[0]
         except exceptions.NameError, e:
             print e
+
