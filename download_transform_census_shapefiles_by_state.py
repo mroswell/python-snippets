@@ -12,30 +12,24 @@ TIGER_SHAPE_TYPES = {
     'upper': 'sldu',
     'lower': 'sldl',
 }
-#TIGER_SHAPE_TYPES = {'congress': 'cd113'} # remove this when not testing
 TIGER_DISTRICTS_URL_BASE = 'http://www2.census.gov/geo/tiger/TIGERrd13_st'
 OGR2OGR = '/Library/Frameworks/GDAL.framework/Versions/Current/Programs/ogr2ogr'
 OGRINFO = '/Library/Frameworks/GDAL.framework/Versions/Current/Programs/ogrinfo'
 
-# mkOGR_NAD84_2_webm_cmd = lambda src, dst: (OGR2OGR, '-f', 'ESRI Shapefile', dst, src, '-s_srs', 'EPSG:4269', '-t_srs', 'EPSG:3857' )
 mkOGR_NAD84_2_webm_cmd = lambda src, dst: (OGR2OGR + ' -f "ESRI Shapefile" '+dst +' '+ src + ' -s_srs "EPSG:4269" -t_srs "EPSG:3857" -overwrite' )
-info_cmd = lambda src: (OGRINFO+' -so '+ src)
-DOWNLOAD_DIR = os.path.expanduser('~/Desktop/ogr2ogr-tests/downloads'); makedirs(DOWNLOAD_DIR)
-WEBM_DIR = os.path.expanduser('~/Desktop/ogr2ogr-tests/webm'); makedirs(WEBM_DIR)
-print("WEBM_DIR", WEBM_DIR)
+DOWNLOAD_DIR = os.path.expanduser('~/Desktop/ogr2ogr-tests/all-states-downloads'); makedirs(DOWNLOAD_DIR)
+WEBM_DIR = os.path.expanduser('~/Desktop/ogr2ogr-tests/all-states-wm'); makedirs(WEBM_DIR)
 TMP_DIR = os.path.expanduser('~/Desktop/ogr2ogr-tests/tmp'); makedirs(TMP_DIR)
-#transform_file = open('transform.sh', "wt")
 
 # The full fips.csv file is here (below the python script)
 # http://vvanhee.wordpress.com/2012/01/25/download-all-u-s-census-block-shapefiles/
-fips_csv = csv.DictReader(open('fips-excerpt.csv', 'rU'), dialect='excel')
+fips_csv = csv.DictReader(open('fips.csv', 'rU'), dialect='excel')
 
 for row in fips_csv:
     stateabbrev = row['twoletter']
 #    statename = row['statename'].upper().replace(' ','_')
     statefips = row['code'].zfill(2)
 
- #   print repr(mkOGR_NAD84_2_webm_cmd('abcd', 'barlksjdf'))
 
     statedownloads = os.path.join(DOWNLOAD_DIR, stateabbrev)
     makedirs(statedownloads)
@@ -55,20 +49,8 @@ for row in fips_csv:
 
         try:
             urllib.urlretrieve(url, filename + ".zip")
-
-
             os.system('unzip ' + filename + ".zip")
-
-#            strinfocmd = repr(info_cmd(fullfilename+".shp"))
-#            os.system(strinfocmd)
-            strtransformcmd = repr(mkOGR_NAD84_2_webm_cmd(fullfilename +".shp", webmapname+".shp"))
-            print("\n---")
-            print(strtransformcmd)
-            print ("---")
-#            os.system(strtransformcmd)
-            os.system(OGR2OGR + ' -f "ESRI Shapefile" '+webmapname +'.shp '+ filename + '.shp -s_srs "EPSG:4269" -t_srs "EPSG:3857" -overwrite' )
-#            os.system(repr(mkOGR_NAD84_2_webm_cmd(filename +".shp", filename+"webm.shp")) )
-          # os.system ('/Library/Frameworks/GDAL.framework/Versions/Current/Programs/ogr2ogr -f ESRI Shapefile ' + filename+"webm.shp " + filename + ".shp  -s_srs EPSG:4269 -t_srs EPSG:3857" )
+            os.system(OGR2OGR + ' -f "ESRI Shapefile" '+webmapname +'.shp '+ filename + '.shp -s_srs "EPSG:4269" -t_srs "EPSG:900913" -overwrite' )
 
 #        except:
 #            print "Unexpected error:", sys.exc_info()[0]
